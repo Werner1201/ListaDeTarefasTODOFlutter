@@ -17,8 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List _toDoList = [];
-
+  List _toDoList = ["Daniel", "Marcos"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +33,8 @@ class _HomeState extends State<Home> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                //Tenta ocupar a maior parte do espaco em quanto outros componentes
+                //diminuem.
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
@@ -49,9 +50,29 @@ class _HomeState extends State<Home> {
                   child: Text("ADD"),
                   textColor: Colors.white,
                   onPressed: (){},
-                )
+                ),
+
               ],
             ),
+          ),
+          Expanded(
+            //ListView Builder eh pq se a lista for grande os itens que nao aparecem
+            //so serao renderizados quando descer a lista
+            child: ListView.builder(
+                padding: EdgeInsets.only(top: 10.0),
+                itemCount: _toDoList.length,
+                itemBuilder: (context, index){
+                  return CheckboxListTile(
+                    title: Text(_toDoList[index]["title"]),
+                    value: _toDoList[index]["ok"],
+                    secondary: CircleAvatar(
+                      child: Icon(
+                        // Se o ok for true vai marcar se nao vai deixar sem
+                          _toDoList[index]["ok"]? Icons.check : Icons.error
+                      ),
+                    ),
+                  );
+                }),
           )
         ],
       ),
