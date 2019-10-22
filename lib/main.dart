@@ -20,10 +20,23 @@ class _HomeState extends State<Home> {
   List _toDoList = [];
   final _toDoController = TextEditingController();
 
-  //Funcao que cria um map e adiciona o titulo e status da tarefa e depois eh
+
+  @override
+  void initState() {
+    super.initState();
+    //Esse readData demora um pouco logo colocamos um callback para quando ele terminar,
+    //Ele adicionar ao todoList a String que o json gera.
+    //Ao adicionar precisamos detectar essa adicao logo colocamos dentro de um setState as mudancas
+    _readData().then((data){
+      setState(() {
+        _toDoList = json.decode(data);
+      });
+    });
+  } //Funcao que cria um map e adiciona o titulo e status da tarefa e depois eh
   //add a _toDoList ao clicar o botao
   void addToDo(){
-   //SetState aqui eh necessario pois precisamos que seja detectado a adicao de um todo na lista.
+   //SetState aqui eh necessario pois precisamos que seja detectado a adicao de um
+    // todo na lista.
     setState(() {
       //Maior parte das vezes trabalhando com JSON, usa-se Maps de String e dynamic
       Map<String, dynamic> newToDo = Map();
@@ -31,6 +44,7 @@ class _HomeState extends State<Home> {
       _toDoController.text = "";
       newToDo["ok"] = false;
       _toDoList.add(newToDo);
+      _saveData();
     });
   }
 
@@ -93,6 +107,7 @@ class _HomeState extends State<Home> {
                     onChanged: (c){
                       setState(() {
                         _toDoList[index]["ok"] = c;
+                        _saveData();
                       });
                     },
                   );
