@@ -94,30 +94,63 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10.0),
                 itemCount: _toDoList.length,
-                itemBuilder: (context, index){
-                  return CheckboxListTile(
-                    title: Text(_toDoList[index]["title"]),
-                    value: _toDoList[index]["ok"],
-                    secondary: CircleAvatar(
-                      child: Icon(
-                        // Se o ok for true vai marcar se nao vai deixar sem
-                          _toDoList[index]["ok"]? Icons.check : Icons.error
-                      ),
-                    ),
-                    onChanged: (c){
-                      setState(() {
-                        _toDoList[index]["ok"] = c;
-                        _saveData();
-                      });
-                    },
-                  );
-                }),
+                itemBuilder: buildItem,
+            ),
           )
         ],
       ),
     );
   }
 
+  Widget buildItem(context, index){
+    return Dismissible(
+      //Eh uma string para ele saber qual eh qual
+      key: Key(DateTime.now().millisecondsSinceEpoch.toString()),
+      background: Container(
+        color: Colors.red,
+        child: Align(
+          alignment: Alignment(-0.9, 0.0),
+          child: Icon(Icons.delete, color: Colors.white,),
+        ),
+      ),
+      direction: DismissDirection.startToEnd,
+      child: CheckboxListTile(
+        title: Text(_toDoList[index]["title"]),
+        value: _toDoList[index]["ok"],
+        secondary: CircleAvatar(
+          child: Icon(
+            // Se o ok for true vai marcar se nao vai deixar sem
+              _toDoList[index]["ok"]? Icons.check : Icons.error
+          ),
+        ),
+        onChanged: (c){
+          setState(() {
+            _toDoList[index]["ok"] = c;
+            _saveData();
+          });
+        },
+      ),
+    );
+  }
+/*
+  CheckboxListTile(
+  title: Text(_toDoList[index]["title"]),
+  value: _toDoList[index]["ok"],
+  secondary: CircleAvatar(
+  child: Icon(
+  // Se o ok for true vai marcar se nao vai deixar sem
+  _toDoList[index]["ok"]? Icons.check : Icons.error
+  ),
+  ),
+  onChanged: (c){
+  setState(() {
+  _toDoList[index]["ok"] = c;
+  _saveData();
+  });
+  },
+  );
+
+*/
   //Pega um diretorio para armazenar o arquivo de dados
   Future<File> _getFile() async {
     final directory = await getApplicationDocumentsDirectory();
