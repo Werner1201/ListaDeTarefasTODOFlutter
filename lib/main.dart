@@ -17,7 +17,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List _toDoList = ["Daniel", "Marcos"];
+  List _toDoList = [];
+  final _toDoController = TextEditingController();
+
+  //Funcao que cria um map e adiciona o titulo e status da tarefa e depois eh
+  //add a _toDoList ao clicar o botao
+  void addToDo(){
+   //SetState aqui eh necessario pois precisamos que seja detectado a adicao de um todo na lista.
+    setState(() {
+      //Maior parte das vezes trabalhando com JSON, usa-se Maps de String e dynamic
+      Map<String, dynamic> newToDo = Map();
+      newToDo["title"] = _toDoController.text;
+      _toDoController.text = "";
+      newToDo["ok"] = false;
+      _toDoList.add(newToDo);
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +61,14 @@ class _HomeState extends State<Home> {
                           color: Colors.blueAccent,
                         )
                     ),
+                    controller: _toDoController,
                   ),
                 ),
                 RaisedButton(
                   color: Colors.blueAccent,
                   child: Text("ADD"),
                   textColor: Colors.white,
-                  onPressed: (){},
+                  onPressed: addToDo,
                 ),
 
               ],
@@ -71,6 +90,11 @@ class _HomeState extends State<Home> {
                           _toDoList[index]["ok"]? Icons.check : Icons.error
                       ),
                     ),
+                    onChanged: (c){
+                      setState(() {
+                        _toDoList[index]["ok"] = c;
+                      });
+                    },
                   );
                 }),
           )
